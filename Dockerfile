@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:20
 
 # 작업 디렉토리 설정
 WORKDIR /usr/src/app
@@ -14,4 +14,5 @@ COPY . .
 EXPOSE 3000
 
 # 서버 실행
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["npm", "start"]
