@@ -59,7 +59,7 @@ class Thumbnail {
                 message: "해당 페이지에 대한 썸네일 데이터를 찾을 수 없습니다."
             };
         }
-
+        console.log('ci')
         return { code: 200, data: validThumbnails };
     }
 }
