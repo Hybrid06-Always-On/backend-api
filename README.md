@@ -1,1 +1,1 @@
-## Hybrid06 백엔드 API 서버 레포지토리
+## Hybrid06 backend API 서버 레포지토리
