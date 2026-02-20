@@ -1,5 +1,5 @@
 const ThumbnailStorage = require('./thumbnailStorage');
-const minio = require('../config/minio');
+const storage = require('../config/storage');
 
 class Thumbnail {
     constructor(body) {
@@ -32,14 +32,22 @@ class Thumbnail {
         if (!rows) rows = [];
         else if (!Array.isArray(rows)) rows = [rows];
 
-        // MinIO URL 생성 처리
+        // 환경에 따른 presigned URL 생성 (MinIO 또는 CloudFront)
         const thumbnails = await Promise.all(rows.map(async (row) => {
             if (row.thumbnail_path) {
-                const thumbUrl = await minio.client.presignedGetObject(
-                    minio.buckets.thumb,
-                    row.thumbnail_path,
-                    24 * 60 * 60 // 24 hours 유효
-                );
+                let thumbUrl;
+
+                if (typeof storage.getPresignedUrl === 'function') {
+                    // AWS: CloudFront signed URL (동기)
+                    thumbUrl = storage.getPresignedUrl('thumb', row.thumbnail_path, 86400);
+                } else {
+                    // OnPremise: MinIO presigned URL (비동기)
+                    thumbUrl = await storage.client.presignedGetObject(
+                        storage.buckets.thumb,
+                        row.thumbnail_path,
+                        24 * 60 * 60 // 24 hours
+                    );
+                }
 
                 return {
                     id: row.id,
