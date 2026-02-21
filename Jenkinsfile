@@ -59,10 +59,10 @@ pipeline {
                         git config user.name "leeeeejieun"
 
                        # 이미지 태그 업데이트
-                        ../yq -i '(.. | select(has("repository") and .repository == "${DOCKER_IMAGE}")).tag = "${DOCKER_TAG}"' charts/backend/values.yaml
+                        ../yq -i '(.. | select(has("repository") and .repository == "${DOCKER_IMAGE}")).tag = "${DOCKER_TAG}"' charts/backend/values-onprem.yaml
 
                         # 변경된 파일 스테이징
-                        git add charts/backend/values.yaml
+                        git add charts/backend/values-onprem.yaml
                         
                         # 변경 사항이 있는 경우에만 커밋 및 푸시 진행
                         if [ -n "\$(git status --porcelain)" ]; then
