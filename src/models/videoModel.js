@@ -1,5 +1,5 @@
 const VideoStorage = require('./videoStorage');
-const minio = require('../config/minio');
+const storage = require('../config/storage');
 
 class Video {
     constructor(body) {
@@ -29,14 +29,20 @@ class Video {
             };
         }
 
-        // MinIO HLS URL 생성 처리
+        // HLS URL 생성 처리 (환경에 따라 MinIO presigned URL 또는 CloudFront signed URL)
         if (row.hls_path) {
-            // HLS 파일에 대한 Presigned URL 생성 (24시간 유효)
-            const hlsUrl = await minio.client.presignedGetObject(
-                minio.buckets.hls,
-                row.hls_path,
-                24 * 60 * 60
-            );
+            let hlsUrl;
+            if (storage.client) {
+                // 온프레미스: MinIO presigned URL (24시간 유효)
+                hlsUrl = await storage.client.presignedGetObject(
+                    storage.buckets.hls,
+                    row.hls_path,
+                    24 * 60 * 60
+                );
+            } else {
+                // AWS: CloudFront signed URL (24시간 유효)
+                hlsUrl = storage.getPresignedUrl(row.hls_path, 24 * 60 * 60);
+            }
 
             // 날짜 포맷팅 (YYYY-MM-DD)
             const dateObj = new Date(row.created_date);
