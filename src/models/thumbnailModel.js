@@ -39,7 +39,7 @@ class Thumbnail {
 
                 if (typeof storage.getPresignedUrl === 'function') {
                     // AWS: CloudFront signed URL (동기)
-                    thumbUrl = storage.getPresignedUrl('thumb', row.thumbnail_path, 86400);
+                    thumbUrl = storage.getPresignedUrl(row.thumbnail_path, 24 * 60 * 60);
                 } else {
                     // OnPremise: MinIO presigned URL (비동기)
                     thumbUrl = await storage.client.presignedGetObject(
