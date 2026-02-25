@@ -12,7 +12,7 @@ const buckets = {
 module.exports = {
     buckets,
 
-    // S3 presignedUrl 생성
+    // CloudFront Pre-Signed URL 생성
     getPresignedUrl: (objectKey, expireSeconds = 86400) => {
         if (!CLOUDFRONT_DOMAIN || !CLOUDFRONT_KEY || !CLOUDFRONT_ID) {
             throw new Error('[Storage] CloudFront 환경 변수가 설정되지 않았습니다.');

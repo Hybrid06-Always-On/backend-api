@@ -6,7 +6,7 @@ let storageClient;
 
 if (environment === 'aws') {
     // AWS 환경: S3 + CloudFront signed URL
-    storageClient = require('./s3');
+    storageClient = require('./cloudfront');
     console.log('[Storage] AWS S3(CloudFront)를 사용합니다.');
 } else {
     // 온프레미스 환경: MinIO presigned URL
